@@ -1,8 +1,6 @@
 import { useCallback, useState } from 'react';
 
 
-export type ReduceCallbackFn<T, U> = (previousValue: U, currentValue: T, currentIndex: number) => U;
-
 export function useArray<T = any>(initial: Array<T> = []) {
   const [array, setArray] = useState(initial);
 
