@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 
 export type ReduceCallbackFn<T, U> = (previousValue: U, currentValue: T, currentIndex: number) => U;
@@ -6,91 +6,64 @@ export type ReduceCallbackFn<T, U> = (previousValue: U, currentValue: T, current
 export function useArray<T = any>(initial: Array<T> = []) {
   const [array, setArray] = useState(initial);
 
-  function push(element: T) {
-    setArray(a => [...a, element]);
-  }
+  const push = useCallback((element: T) => {
+    const nextArray = [...array, element];
+    setArray(nextArray);
+    return nextArray.length;
+  }, [array]);
 
-  function unshift(element: T) {
-    setArray(a => [element, ...a]);
-  }
+  const unshift = useCallback((element: T) => {
+    const nextArray = [element, ...array];
+    setArray(nextArray);
+    return nextArray.length;
+  }, [array]);
 
-  function pop() {
+  const pop = useCallback(() => {
     const nextArray = [...array];
     const returnVal = nextArray.pop();
     setArray(nextArray);
     return returnVal;
-  }
+  }, [array]);
 
-  function shift() {
+  const shift = useCallback(() => {
     const nextArray = [...array];
     const returnVal = nextArray.shift();
     setArray(nextArray);
     return returnVal;
-  }
+  }, [array]);
 
-  function filter<S extends T>(callback: ((value: T, index: number) => value is S)) {
-    setArray(a => a.filter(callback));
-  }
-
-  function update(index: number, newElement: T) {
-    setArray(a => ([
-      ...a.slice(0, index),
+  const update = useCallback((index: number, newElement: T) => {
+    const nextArray = [
+      ...array.slice(0, index),
       newElement,
-      ...a.slice(index + 1, a.length - 1),
-    ]));
-  }
+      ...array.slice(index + 1, array.length - 1)
+    ];
+    setArray(nextArray);
+    return nextArray;
+  }, [array]);
 
-  function remove(index: number) {
-    setArray(a => ([
-      ...a.slice(0, index),
-      ...a.slice(index + 1, a.length - 1),
-    ]));
-  }
+  const remove = useCallback((index: number) => {
+    const nextArray = [
+      ...array.slice(0, index),
+      ...array.slice(index + 1, array.length -1),
+    ];
+    setArray(nextArray);
+    return nextArray;
+  }, [array]);
 
-  function insert(index: number, newElement: T) {
-    setArray(a => ([
-      ...a.slice(0, index),
+  const insert = useCallback((index: number, newElement: T) => {
+    const nextArray = [
+      ...array.slice(0, index),
       newElement,
-      ...a.slice(index, a.length - 1),
-    ]));
-  }
-
-  function sort(compareFn: (a: T, b: T) => number) {
-    setArray(a => a.sort(compareFn));
-  }
+      ...array.slice(index, array.length - 1),
+    ];
+    setArray(nextArray);
+    return nextArray;
+  }, [array]);
 
   function clear() {
     setArray([]);
   }
 
-  function map(callback: (value: T, index: number) => T) {
-    setArray(a => a.map(callback));
-  }
-
-  function mapped<U = any>(callback: (value: T, index: number) => U): U[] {
-    return array.map(callback);
-  }
-
-  function reduce(callback: ReduceCallbackFn<T, T[]>) {
-    setArray(a => a.reduce(callback, []));
-  }
-
-  function reduced<U = any>(callback: ReduceCallbackFn<T, U>, initialValue: U): U {
-    return array.reduce(callback, initialValue);
-  }
-
-  function every(callback: (value: T, index: number) => unknown): boolean {
-    return array.every(callback);
-  }
-
-  function some(callback: (value: T, index: number) => unknown): boolean {
-    return array.some(callback);
-  }
-
-  function includes(value: T): boolean {
-    return array.includes(value);
-  }
-
-  return { array, clear, every, filter, includes, insert, map, mapped, pop, push, reduce,
-    reduced, remove, set: setArray, shift, some, sort, unshift, update };
+  return { array, clear, insert, pop, push, remove, set: setArray, shift, unshift, update };
 }
