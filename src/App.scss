@@ -1,0 +1,27 @@
+body {
+  box-sizing: border-box;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+
+.App {
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  margin: 0 24px;
+  min-height: 100%;
+
+  .app-header {
+    flex: 0 1 15%;
+  }
+
+  .app-footer {
+    flex: 0 1 10%;
+  }
+
+  .app-main {
+    flex: 1 1 auto;
+  }
+}
