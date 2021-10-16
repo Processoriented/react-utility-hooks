@@ -1,16 +1,14 @@
-import React from 'react';
+import React, { FC, ReactElement } from 'react';
 import './App.scss';
-import FormPage from './pages/FormPage';
+import DemoPage from './pages/DemoPage';
 
-function App() {
+const App: FC = (): ReactElement => {
   return (
     <div className="App">
       <header className="app-header">
         <h1>Utility Hooks</h1>
       </header>
-      <main className="app-main">
-        <FormPage />
-      </main>
+      <DemoPage className="app-main" />
       <footer className="app-footer"></footer>
     </div>
   );
