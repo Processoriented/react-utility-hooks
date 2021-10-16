@@ -5,9 +5,11 @@ export type TimeoutCallbackFn = (...args: any[]) => void;
 
 export function useTimeout(callback: TimeoutCallbackFn, delay: number) {
   const callbackRef = useRef(callback);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<any>();
 
-  useEffect(() => callbackRef.current = callback, [callback]);
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
 
   const set = useCallback(() => {
     timeoutRef.current = setTimeout(() => callbackRef.current(), delay);
@@ -20,7 +22,7 @@ export function useTimeout(callback: TimeoutCallbackFn, delay: number) {
   useEffect(() => {
     set();
     return clear;
-  }, [delay, set, clear]);
+  }, [set, clear]);
 
   const reset = useCallback(() => {
     clear();
