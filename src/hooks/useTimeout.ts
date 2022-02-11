@@ -20,7 +20,7 @@ export function useTimeout(callback: TimeoutCallbackFn, delay: number) {
   useEffect(() => {
     set();
     return clear;
-  }, [delay, set, clear]);
+  }, [clear, delay, set]);
 
   const reset = useCallback(() => {
     clear();
