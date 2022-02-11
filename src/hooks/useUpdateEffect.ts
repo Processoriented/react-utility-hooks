@@ -2,12 +2,16 @@ import React, { useEffect, useRef } from 'react';
 
 
 export function useUpdateEffect(callback: React.EffectCallback, dependencies: React.DependencyList) {
+  const callbackRef = useRef(callback);
   const firstRenderDone = useRef(false);
 
   useEffect(() => {
-    if (firstRenderDone.current) return callback();
+    callbackRef.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    firstRenderDone.current && callbackRef.current();
     firstRenderDone.current = true;
-    return;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [callback, ...dependencies]);
+  }, [...dependencies]);
 }
