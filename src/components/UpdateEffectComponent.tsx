@@ -1,10 +1,18 @@
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useRef, useState } from 'react';
 import { useUpdateEffect } from '../hooks';
 
 
 const UpdateEffectComponent: FC = (): ReactElement => {
   const [count, setCount] = useState(10);
-  useUpdateEffect(() => alert(count), [count]);
+  const initialized = useRef(false);
+
+  useUpdateEffect(() => alert(`Update effect count: ${count}.`), [count]);
+  
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    alert(`Regular effect count: ${count}`);
+  }, [count]);
 
   return (
     <div>
